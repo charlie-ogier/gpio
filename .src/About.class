@@ -1,0 +1,13 @@
+' Gambas class file
+
+Public Sub Form_Open()                                              'What to do when the form opens
+
+LabelVersion.text = FMain.sVersion                                  'Show the program's version details
+
+End
+
+Public Sub ButtonDone_Click()                                       'What to do when the 'Done' button is clicked
+
+Me.Close                                                            'Close the About window
+
+End

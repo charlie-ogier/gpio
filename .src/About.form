@@ -1,0 +1,25 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,64,64)
+  Icon = Picture["GPIO logo.png"]
+  Arrangement = Arrange.Vertical
+  Padding = 5
+  { TextLabel1 TextLabel
+    MoveScaled(9,4,48,45)
+    Expand = True
+    Text = ("GPIO<br>\nThis program is written for the Raspberry Pi in Gambas 3.5.4 to contol and view the GPIO pins on the Raspberry Pi<p>\n\nThe program needs the 'gpio' command line tool from the 'wiringpi' tool kit to work - Search the internet for 'download wiringpi'<p>\n\nVersion V0.1.0<br>\nA place to start<p>\n\nVersion V0.1.1 (26/06/2016)<br>\nAdded Pi details display at the request of SteveDee<p>\n\nComments and/or bugs to bugs@cogier.com<p>\n\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by \nthe Free Software Foundation; either version 2 of the License, or (at your option) any later version.<p>\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<p>\n\nIf you require a copy of the GNU General Public License please write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,  Boston, MA  02110-1301  USA")
+  }
+  { HBox1 HBox
+    MoveScaled(3,57,56,4)
+    { LabelVersion Label
+      MoveScaled(1,1,15,2)
+      Expand = True
+    }
+    { ButtonDone Button
+      MoveScaled(41,0,11,3)
+      ToolTip = ("Close this window")
+      Text = ("&Done")
+    }
+  }
+}

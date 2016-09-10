@@ -1,0 +1,119 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,56,71.1111)
+  Icon = Picture["GPIO logo.png"]
+  Arrangement = Arrange.Vertical
+  Padding = 5
+  { HBox2 HBox
+    MoveScaled(0,1,55,4)
+    { ToolButtonAbout ToolButton
+      MoveScaled(0,0,5,3)
+      ToolTip = ("About")
+      Picture = Picture["icon:/32/text"]
+    }
+    { Panel3 Panel
+      MoveScaled(16,0,8,2)
+      Expand = True
+    }
+    { ToolButtonExit ToolButton
+      MoveScaled(39,0,4,3)
+      ToolTip = ("Exit program - Bye Bye!")
+      Picture = Picture["icon:/32/cancel"]
+    }
+  }
+  { Timer1 #Timer
+    #MoveScaled(0,8)
+  }
+  { GridView1 GridView
+    MoveScaled(7,8,38,36)
+    Expand = True
+  }
+  { LabelPi Label
+    MoveScaled(1,45,53,3)
+    Font = Font["Bold"]
+    Alignment = Align.Center
+  }
+  { HBox1 HBox
+    MoveScaled(0,48,56,3)
+    { Label1 Label
+      MoveScaled(-1,0,12,3)
+      Text = ("BCM Pin No.")
+      Alignment = Align.Bottom
+    }
+    { Label3 Label
+      MoveScaled(10,0,14,3)
+      Text = ("Mode")
+      Alignment = Align.Bottom
+    }
+    { PanelPWM Panel
+      MoveScaled(26,1,8,2)
+      Visible = False
+    }
+    { Label2 Label
+      MoveScaled(34,1,11,2)
+      Text = ("Read/Write")
+      Alignment = Align.Bottom
+    }
+    { Panel2 Panel
+      MoveScaled(45,1,2,2)
+      Expand = True
+    }
+    { Label4 Label
+      MoveScaled(47,0,8,2)
+      Text = ("Reset")
+      Alignment = Align.Bottom
+    }
+  }
+  { Separator1 Separator
+    MoveScaled(4,51,49,0.7778)
+  }
+  { HBoxControl1 HBox
+    MoveScaled(0,52,56,3)
+    { ComboBoxPinList1 ComboBox MainControl
+      Name = "ComboBoxPinList1"
+      MoveScaled(-1,0,12,3)
+      ReadOnly = True
+    }
+    { RadioButtonIn1 RadioButton MainControl
+      Name = "RadioButtonIn1"
+      MoveScaled(11,0,7,3)
+      Text = ("In")
+      Value = True
+    }
+    { RadioButtonOut1 RadioButton MainControl
+      Name = "RadioButtonOut1"
+      MoveScaled(17,0,7,3)
+      Text = ("Out")
+    }
+    { RadioButtonPWM RadioButton MainControl
+      Name = "RadioButtonPWM"
+      MoveScaled(25,0,8,3)
+      Visible = False
+      Text = ("PWM")
+    }
+    { ToggleButton1 ToggleButton MainControl
+      Name = "ToggleButton1"
+      MoveScaled(34,0,11,3)
+      Text = ("&On/Off")
+    }
+    { Panel1 Panel
+      MoveScaled(45,0,2,2)
+      Expand = True
+    }
+    { ButtonClearAll Button
+      MoveScaled(48,0,8,3)
+      Text = ("&ClearAll")
+    }
+  }
+  { HBoxPWMSlider HBox
+    MoveScaled(0,55,55,3)
+    Visible = False
+    { Slider1 Slider
+      MoveScaled(3,0,14,2)
+      ToolTip = ("The slider will control the amount of current passed to the device")
+      Expand = True
+      MaxValue = 1023
+    }
+  }
+}

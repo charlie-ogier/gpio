@@ -1,0 +1,179 @@
+' Gambas class file
+
+Public sVersion As String = "Version 0.1.1 (2016)"                                'The program's version details
+
+Public Sub Form_Open()
+
+Me.Center                                                                         'Centre the form
+SetUpControls                                                                     'Go to the routine to setup the controls
+
+GetPiDetails                                                                      'Get the details of the Pi 
+Timer1.delay = 250                                                                'Set the Timer delay
+''WARNING LOW TIMER DELAYS (e.g. 1) CAUSE PROCESSOR USE TO RISE
+Timer1.Start                                                                      'Start the Timer
+SetUpGridView                                                                     'Go to the routine to setup the GridView
+
+End
+
+Public Sub GetPiDetails()                                                         'To gather the details of the Pi being used
+Dim sDetails, sTemp As String                                                     'sDetails to store the out put of 'gpio -v'and a temp string
+
+Shell "gpio -v" To sDetails                                                       'Get the output from 'gpio -v' into sDetails
+
+For Each sTemp In Split(sDetails, "\n")                                           'For each line in sDetails..
+  If InStr(sTemp, "Type:") Then LabelPi.text = Replace(sTemp, "Type: ", "")       'Check for the text 'Type:' and if present display the result without 'Type: '
+Next
+
+End
+
+Public Sub SetUpControls()                                                        'Setup the controls
+ Dim siPinList As Short[] = [4, 17, 27, 22, 5, 6, 13, 19, 26, 18, 23, 24, 25, 
+ 8, 7, 12, 16, 20, 21]                                                            'List of Pins that can be used
+ Dim siTemp As Short                                                              'Temp string
+
+ For Each siTemp In siPinList                                                     'Fill the ComboBox with the pins from the list in sPinList
+   ComboBoxPinList1.Add(Str(siTemp))
+ Next
+
+Slider1.value = 0                                                                 'Set the slider value to 0 of 1024
+
+End
+
+Public Sub Timer1_Timer()                                                         'Timer that deals with the main display
+Dim sString As String                                                             'Main string to hold the out put of the Shelled command "gpio readall"
+Dim sTemp1, sTemp2 As String                                                      'Temporary strings
+Dim sSplit1, sSplit2 As String[]                                                  'Strings to hold the seperate string when Split
+Dim sReadAll As New String[15, 22]                                                'This array hold the data once processed
+Dim siFSplit As Short                                                             'Counter
+Dim siCount As Short = -1                                                         'Counter
+Dim siReadAll As Short                                                            'Counter
+Dim siCount1 As Short                                                             'Counter
+
+Shell "gpio readall" To sString                                                   'Get and store the data
+
+sSplit1 = Split(sString, "\n")                                                    'Split the data into lines seperated by the NewLine character "\n"
+
+For Each sTemp1 In sSplit1                                                        'For each line of text in the Split data..
+  Inc siCount                                                                     'Increase the value of the counter
+  If siCount = 0 Or siCount = 2 Or siCount = 23 Or sicount = 25 Then Continue     'Ignore the 4 lines with no data
+  sTemp1 = Replace(sTemp1, "| Physical |", "|Pin||Pin|")                          'Replace the string '| Physical |' with '|Pin||Pin|'
+  sSplit2 = Split(sTemp1, "|")                                                    'Split the line into data seperated by '|'
+    For Each sTemp2 In sSplit2                                                    'For each line of text in the Split data..
+      sReadAll[siFSplit, siReadAll] = Trim(sTemp2)                                'Take the value which is a string and get rid of any spaces at the begging or end of the string
+      Inc siFSplit                                                                'Increase the counter
+    Next
+  siFSplit = 0                                                                    'Reset counter
+  Inc siReadAll                                                                   'Increase counter
+Next
+
+For siCount1 = 0 To 21                                                            'A loop for each of the 22 Rows in the GridView
+  For siCount = 1 To 13                                                           'A loop for each of the 14 Columns in the GredView
+    GridView1[siCount1, siCount - 1].text = sReadAll[siCount, siCount1]           'Put the correct value from the main sReadAll array into the correct cell
+    If GridView1[siCount1, siCount - 1].text = "IN" Then GridView1[siCount1, siCount - 1].Background = Color.white    'Change the colours of the background depending on the value in certain cells
+    If GridView1[siCount1, siCount - 1].text = "OUT" Then GridView1[siCount1, siCount - 1].Background = Color.yellow  'Change the colours of the background depending on the value in certain cells
+    If siCount - 1 = 4 Or siCount - 1 = 8 Then
+      If GridView1[siCount1, siCount - 1].text = "1" Then GridView1[siCount1, siCount - 1].Background = Color.Orange  'Change the colours of the background depending on the value in certain cells
+      If GridView1[siCount1, siCount - 1].text = "0" Then GridView1[siCount1, siCount - 1].Background = Color.White   'Change the colours of the background depending on the value in certain cells
+    End If
+  Next
+Next
+
+End
+
+Public Sub SetUpGridView()                                                        'To setup the GridView component
+Dim siCount As Short                                                              'Counter
+
+With GridView1                                                                    'Saves typing GridView a lot
+  .Columns.Count = 13                                                             '13 Columns please
+  .rows.count = 22                                                                '22 Rows please
+  .Font.Size = 10                                                                 'Set Font size to 10
+  .Font.bold = True                                                               'Set Font to Bold
+End With                                                                          'End of saving having to type GridView a lot
+
+For siCount = 0 To 12                                                             'Column loop
+  With GridView1                                                                  'Saves typing GridView a lot
+    .Columns[siCount].Alignment = Align.Center                                    'Set the Column to Centre-align the contence of each cell
+    .Columns[siCount].Width = 30                                                  'Set the Width of each Column to 30
+  End With                                                                        'End of saving having to type GridView a lot
+Next
+
+For siCount = 0 To 12                                                             'To count Columns
+  With GridView1                                                                  'Saves typing GridView a lot
+    .[0, siCount].Foreground = Color.Red                                          'For all the cells in Column 0 set the text colour 'Red'
+    .[21, siCount].Foreground = Color.Red                                         'For all the cells in Column 21 set the text colour 'Red'
+    .[0, siCount].Background = Color.LightGray                                    'For all the cells in Column 0 set the Background colour 'Light Gray'
+    .[21, siCount].Background = Color.LightGray                                   'For all the cells in Column 21 set the Background colour 'Light Gray'
+  End With                                                                        'End of saving having to type GridView a lot
+Next
+
+For siCount = 1 To 20                                                             'Row counter
+  GridView1[siCount, 5].Alignment = Align.Right                                   'Set each cell in Column 5 to 'Align Right'
+Next
+
+With GridView1                                                                    'Saves typing GridView a lot
+  .Columns[2].Width = 60                                                          'Change Column width
+  .Columns[3].Width = 50                                                          'Change Column width
+  .Columns[9].Width = 50                                                          'Change Column width
+  .Columns[10].Width = 50                                                         'Change Column width
+  .Columns[6].Width = 10                                                          'Change Column width
+  .Columns[6].Background = Color.Gray                                             'Change Column Background colour
+  .Columns[7].Alignment = Align.Left                                              'Change Column to 'Align Left'
+End With
+
+End
+
+Public Sub Control()                                                              'This routine is called whenever a control value is changed (E.g. when a pin number is changed)
+Dim siInOut As Short                                                              'To store 'In' and 'Out' options
+
+If RadioButtonIn1.Value = True Then                                               'If you clicked on the 'In' RadioButton then..
+  siInOut = 1                                                                     'The value of siInOut = 1
+Else                                                                              'Else....
+  siInOut = 0                                                                     'The value of siInOut = 0
+End If
+
+If ComboBoxPinList1.text = "18" Then                                              'Only Pin 18 can handle 'PWM' mode so if Pin 18 selected then
+  PanelPWM.Visible = True                                                         'Make the 'Panel PWM' visable this is to keep the text in line
+  RadioButtonPWM.Visible = True                                                   'Make the 'PWM' RadioButton visable
+    If RadioButtonPWM.Value = True Then                                           'If the 'PWM' option is selected then..
+      HBoxPWMSlider.Visible = True                                                'Make the Slider visable
+    Else                                                                          'Else..
+      HBoxPWMSlider.Visible = False                                               'Hide the Slider
+    End If 
+  Gpio.Setup(18, 3)                                                               'Setup Pin 18 to mode 'PWM'
+  Gpio.pwm(18, Slider1.value)                                                     'Set the value to the Slide value
+Else                                                                              'Else..
+  PanelPWM.Visible = False                                                        'Hide the 'Panel PWM'
+  RadioButtonPWM.Visible = False                                                  'Hide the PWM RadioButton
+  HBoxPWMSlider.Visible = False                                                   'Hide the Slider
+  Gpio.Setup(Val(ComboBoxPinList1.text), siInOut)                                 'Set the chosen Pin to In or Out
+  Gpio.Write(Val(ComboBoxPinList1.text), ToggleButton1.value)                     'Write (or not) to the chosen Pin
+Endif
+
+End
+
+Public Sub ButtonClearAll_Click()                                                 'To reset all the Pins
+
+Gpio.ClearAll                                                                     'Run the ClearAll routine
+ComboBoxPinList1.Text = "4"                                                       'Reset the Pin selection to '4'
+RadioButtonIn1.value = True                                                       'Set the 'In' RadioButton to 'True'
+ToggleButton1.value = False                                                       'Set the On/Off ToggleButton value to Off (False)
+
+End
+
+Public Sub MainControl_Click()                                                    'This controls the Pin ComboBox, the RadioButtons and the 'On/Off' ToggleButton
+
+Control                                                                           'Go to the Control Routine.
+
+End
+
+Public Sub ToolButtonExit_Click()                                                 'To exit the program
+
+Me.Close                                                                          'Bye bye!
+
+End
+
+Public Sub ToolButtonAbout_Click()                                                'What to do when the 'About' tool button is clicked
+
+About.ShowModal                                                                   'Show the 'About' form
+
+End
